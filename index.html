@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="VeriDID builds custom verifiable credential software: Credential Management Systems, SSI mobile wallets, and smart contracts." />
+  <title>VeriDID — Verifiable Credential Software Services</title>
+  <style>
+    :root{
+      /* Layout backgrounds per request */
+      --header-bg:#f3f4f8;
+      --page-bg:#000000;     /* body main area + footer */
+      --panel:#0f172a;       /* dark panels */
+      --panel2:#111827;
+      --text:#f0f2f6;
+      --muted:#c3cad7;
+      --border:#263247;
+
+      /* Logo-inspired SOLID colors (no gradients) */
+      --green:#39d353;
+      --orange:#f59e0b;
+      --pink:#ec4899;
+
+      --shadow: 0 8px 22px rgba(0,0,0,0.35);
+      --shadow2: 0 4px 12px rgba(0,0,0,0.28);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:var(--page-bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:1100px; margin:0 auto; padding:0 20px}
+
+    /* Header: white background */
+    header{
+      position:sticky; top:0; z-index:10;
+      background:var(--header-bg);
+      border-bottom:1px solid #e5e7eb;
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0;
+      gap:16px;
+    }
+    .logo-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.15rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+    }
+
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      min-width:240px;
+    }
+    .brand .logoBox{
+      width:44px; height:44px;
+      border-radius:12px;
+      border:1px solid #e5e7eb;
+      background:#ffffff;
+      display:flex; align-items:center; justify-content:center;
+      overflow:hidden;
+    }
+    .brand .logoBox img{width:40px; height:40px; display:block}
+    .brand strong{font-size:16px; letter-spacing:0.2px; color:#0b1220}
+    .brand span{display:block; font-size:12px; color:#4b5563}
+
+    nav ul{
+      list-style:none; margin:0; padding:0;
+      display:flex; gap:14px; flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    nav a{
+      display:inline-block;
+      padding:8px 10px;
+      border-radius:10px;
+      color:#374151;
+      border:1px solid transparent;
+      outline:none;
+    }
+    nav a:hover{color:#0b1220; border-color:#e5e7eb; background:#f3f4f6}
+    nav a:focus-visible{
+      border-color:var(--green);
+      box-shadow:0 0 0 3px rgba(57,211,83,0.20);
+    }
+
+    .cta{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;
+      min-width:260px;
+    }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid #e5e7eb;
+      background:#ffffff;
+      color:#0b1220;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .05s ease, filter .15s ease, border-color .15s ease, background .15s ease;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      background:var(--green);
+      border-color:rgba(0,0,0,0.12);
+      color:#07130b;
+    }
+    .btn.secondary{
+      background:#ffffff;
+      border-color:rgba(245,158,11,0.65);
+      color:#0b1220;
+    }
+    .btn.ghost{
+      background:#ffffff;
+      border-color:var(--green);
+      color:#0b1220;
+    }
+    .btn.secondary:hover,.btn.ghost:hover{filter:brightness(0.98); background:#f9fafb}
+    .btn.primary:hover{filter:brightness(1.03)}
+
+    /* Main sections on black background */
+    main{background:var(--page-bg)}
+    .hero{
+      padding:54px 0 18px;
+      border-bottom:1px solid var(--border);
+      position:relative;
+      overflow:hidden;
+      background:var(--page-bg);
+    }
+
+    .heroGrid{
+      display:grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap:26px;
+      align-items:stretch;
+    }
+
+    .kicker{
+      display:inline-flex; gap:10px; align-items:center;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(17,24,39,0.65);
+      color:var(--muted);
+      font-size:13px;
+      width:max-content;
+    }
+    .kicker .dot{
+      width:9px; height:9px; border-radius:999px;
+      background:var(--green);
+      animation: dotPulse 2.4s ease-in-out infinite;
+    }
+    @keyframes dotPulse{
+      0%,100%{transform:scale(1); filter:brightness(1)}
+      50%{transform:scale(1.35); filter:brightness(1.1)}
+    }
+
+    h1{
+      margin:14px 0 10px;
+      font-size:42px;
+      line-height:1.1;
+      letter-spacing:-0.4px;
+    }
+    .lead{
+      margin:0 0 18px;
+      font-size:16px;
+      color:var(--muted);
+      max-width:62ch;
+    }
+    .heroActions{display:flex; gap:10px; flex-wrap:wrap; margin:10px 0 0}
+
+    .pillRow{
+      display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;
+    }
+    .pill{
+      font-size:14px;
+      color:var(--text);
+      background:rgba(17,24,39,0.65);
+      border:1px solid var(--border);
+      padding:7px 10px;
+      border-radius:999px;
+      white-space:nowrap;
+    }
+    .pill.green{border-color:rgba(57,211,83,0.55)}
+    .pill.orange{border-color:rgba(245,158,11,0.55)}
+    .pill.pink{border-color:rgba(236,72,153,0.55)}
+
+    .card{
+      background:rgba(17,24,39,0.7);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+    .card h3{margin:0 0 8px; font-size:16px}
+    .card p{margin:0; color:var(--muted); font-size:16px}
+
+    /* --- Workflow animation (Organization <-> Credential Holder) --- */
+    .workflow{
+      margin-top:14px;
+      border:1px solid var(--border);
+      background:rgba(15,23,42,0.9);
+      border-radius:16px;
+      padding:14px;
+      position:relative;
+      overflow:hidden;
+    }
+    .wfTitle{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .wfTitle .label{
+      font-size:15px; color:var(--muted);
+      border:1px solid var(--border);
+      background:rgba(17,24,39,0.6);
+      padding:6px 10px;
+      border-radius:999px;
+      width:max-content;
+    }
+    .wfCanvas{
+      position:relative;
+      height:108px;
+      border:1px solid rgba(38,50,71,0.9);
+      border-radius:14px;
+      background:rgba(17,24,39,0.55);
+      overflow:hidden;
+    }
+    .wfNode{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:150px;
+      border:1px solid rgba(38,50,71,1);
+      background:rgba(17,24,39,0.85);
+      border-radius:14px;
+      padding:10px 10px;
+    }
+    .wfNode.org{left:12px}
+    .wfNode.holder{right:12px}
+    .wfNode b{display:block; font-size:16px; color:var(--text); margin-bottom:2px}
+    .wfNode span{display:block; font-size:12px; color:var(--muted)}
+    .wfIcon{
+      width:28px; height:28px; border-radius:10px;
+      display:inline-flex; align-items:center; justify-content:center;
+      margin-bottom:8px;
+      border:1px solid rgba(0,0,0,0.25);
+      font-weight:900;
+    }
+    .wfIcon.org{background:var(--orange); color:#1a1206}
+    .wfIcon.holder{background:var(--pink); color:#1a0712}
+
+    /* connection lines */
+    .wfLine{
+      position:absolute;
+      left:180px;
+      right:180px;
+      top:50%;
+      height:2px;
+      transform:translateY(-50%);
+      background:rgba(167,176,192,0.22);
+    }
+    .wfLine::before, .wfLine::after{
+      content:"";
+      position:absolute; top:50%;
+      width:10px; height:10px;
+      transform:translateY(-50%) rotate(45deg);
+      border-right:2px solid rgba(167,176,192,0.35);
+      border-top:2px solid rgba(167,176,192,0.35);
+    }
+    .wfLine::before{left:8px}
+    .wfLine::after{right:8px; transform:translateY(-50%) rotate(225deg)}
+
+    /* animated message tokens */
+    .token{
+      position:absolute;
+      top:50%;
+      width:10px; height:10px;
+      border-radius:3px;
+      transform:translateY(-50%);
+      border:1px solid rgba(0,0,0,0.25);
+      opacity:0.95;
+    }
+    .token.issue{background:var(--green)}
+    .token.request{background:var(--orange)}
+    .token.proof{background:var(--pink)}
+
+    /* motion paths: left->right and right->left along the line */
+    @keyframes toHolder{
+      0%{left:190px; opacity:0}
+      10%{opacity:1}
+      90%{opacity:1}
+      100%{left:calc(100% - 200px); opacity:0}
+    }
+    @keyframes toOrg{
+      0%{left:calc(100% - 200px); opacity:0}
+      10%{opacity:1}
+      90%{opacity:1}
+      100%{left:190px; opacity:0}
+    }
+
+    /* Staggered sequence to suggest a workflow */
+    .token.t1{animation: toHolder 3.2s ease-in-out infinite}
+    .token.t2{animation: toOrg 3.2s ease-in-out infinite; animation-delay:1.0s}
+    .token.t3{animation: toHolder 3.2s ease-in-out infinite; animation-delay:2.0s}
+
+    .wfLegend{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top:10px;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .leg{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid var(--border);
+      background:rgba(17,24,39,0.6);
+      padding:6px 10px;
+      border-radius:999px;
+    }
+    .swatch{width:10px; height:10px; border-radius:3px; border:1px solid rgba(0,0,0,0.25)}
+    .swatch.issue{background:var(--green)}
+    .swatch.request{background:var(--orange)}
+    .swatch.proof{background:var(--pink)}
+
+    /* Content sections */
+    section{padding:32px 0}
+    .sectionHead{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:14px; flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    .sectionHead h2{
+      margin:0;
+      font-size:22px;
+      letter-spacing:-0.2px;
+    }
+    .sectionHead p{margin:0; color:var(--muted); max-width:70ch}
+
+    .grid3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+    }
+    .grid2{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:14px;
+    }
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(15,23,42,0.9);
+      color:var(--muted);
+      width:max-content;
+    }
+    .badge{width:10px; height:10px; border-radius:3px; background:var(--orange)}
+    .badge.pink{background:var(--pink)}
+    .badge.green{background:var(--green)}
+
+    ul.clean{
+      list-style:none; padding:0; margin:10px 0 0;
+      display:grid; gap:8px;
+    }
+    ul.clean li{
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(15,23,42,0.9);
+      color:var(--muted);
+      font-size:16px;
+      box-shadow:var(--shadow2);
+    }
+
+    .card.accent-green{border-color:rgba(57,211,83,0.45)}
+    .card.accent-orange{border-color:rgba(245,158,11,0.45)}
+    .card.accent-pink{border-color:rgba(236,72,153,0.45)}
+
+    .callout{
+      border:1px solid var(--border);
+      background:rgba(17,24,39,0.75);
+      border-radius:18px;
+      padding:18px;
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      box-shadow:var(--shadow);
+    }
+    .callout h3{margin:0 0 6px; font-size:16px}
+    .callout p{margin:0; color:var(--muted); max-width:78ch}
+    .callout.accent-green{border-color:rgba(57,211,83,0.45)}
+
+    /* Footer background black */
+    footer{
+      padding:22px 0;
+      border-top:1px solid var(--border);
+      border-color: var(--green);
+      color:var(--muted);
+      font-size:13px;
+      background:var(--page-bg);
+    }
+    .small{font-size:12px; color:var(--muted)}
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important; transition:none !important}
+      html{scroll-behavior:auto}
+    }
+
+    @media (max-width: 920px){
+      .heroGrid{grid-template-columns:1fr}
+      .cta{min-width:auto}
+      .wfLine{left:170px; right:170px}
+      .wfNode{width:140px}
+    }
+    @media (max-width: 860px){
+      .grid3{grid-template-columns:1fr}
+      .grid2{grid-template-columns:1fr}
+      h1{font-size:34px}
+      nav ul{display:none}
+    }
+    @media (max-width: 520px){
+      .wfLine{left:155px; right:155px}
+      .wfNode{width:132px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="nav">
+        <a class="brand" href="#top" aria-label="VeriDID Home">
+          <div class="logo-mark">V</div>
+          <div>
+            <strong>VeriDID</strong>
+            <span>Custom verifiable credential software</span>
+          </div>
+        </a>
+
+        <nav aria-label="Primary">
+          <ul>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#standards">Standards</a></li>
+            <li><a href="#workflows">DIDComm</a></li>
+            <li><a href="#usecases">Use cases</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+
+        <div class="cta">
+          <a class="btn secondary" href="#services">Explore</a>
+          <a class="btn primary" href="#contact">Request a consult</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <div class="hero">
+      <div class="wrap">
+        <div class="heroGrid">
+          <div>
+            <div class="kicker"><span class="dot" aria-hidden="true"></span> Build trusted digital interactions with verifiable credentials</div>
+            <h1>Credential Management Systems, SSI wallets, and smart contracts—built for your organization.</h1>
+            <p class="lead">
+              VeriDID provides custom verifiable credential software services for developing credential management systems (CrMS),
+              SSI mobile wallets, and blockchain smart contracts. We help you extend your internal processes securely to credential holders using DIDComm connections and workflows.
+            </p>
+
+            <div class="heroActions">
+              <a class="btn primary" href="#contact">Talk to VeriDID</a>
+              <a class="btn ghost" href="#workflows">See DIDComm workflows</a>
+            </div>
+
+            <div class="pillRow" aria-label="Supported credential types">
+              <span class="pill green">AnonCreds</span>
+              <span class="pill green">W3C Verifiable Credentials</span>
+              <span class="pill green">OpenBadges</span>
+              <span class="pill green">mDL</span>
+              <span class="pill green">LER / CLR Support</span>
+            </div>
+          </div>
+
+          <aside class="card accent-green" aria-label="What we deliver">
+            <h3>Workflow example</h3>
+            <p>A simple workflow sequence: verify a a user's identity, ask a question, request a credential, and issue a credential.</p>
+
+            <div class="workflow" aria-label="Organization to credential holder workflow animation">
+              <div class="wfTitle">
+                <div class="label">Connect the Organization ↔ Credential Holder</div>
+                <div class="label">Provide context on the workflow Organization ↔ Credential Holder</div>
+                <div class="label">Request a proof Organization ↔ Credential Holder</div>
+                <div class="label">Send the proof Credential Holder ↔ Organization</div>
+                <div class="label">Ask the questions Organization ↔ Credential Holder</div>
+                <div class="label">Send the answer Credential Holder ↔ Organization</div>
+                <div class="label">Offer the credential Organization ↔ Credential Holder</div>
+                <div class="label">Accept the offer Credential Holder ↔ Organization</div>
+                
+                <div class="label">Secure • Authorized • Contextual</div>
+              </div>
+            </div>
+
+            <div class="small" style="margin-top:10px; color:var(--muted);">
+              Remove fraud, phishing, and scamming by keeping users in a verified, cryptographically authenticated channel.
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <section id="services">
+      <div class="wrap">
+        <div class="sectionHead">
+          <div>
+            <h2>Services</h2>
+            <p>From greenfield builds to integration with existing systems—VeriDID helps you design, build, and deploy verifiable credential solutions.</p>
+          </div>
+        </div>
+
+        <div class="grid3">
+          <div class="card accent-green">
+            <div class="tag"><span class="badge green" aria-hidden="true"></span> Credential Management System (CrMS)</div>
+            <h3 style="margin-top:10px;">Operate your credential ecosystem</h3>
+            <p>Issuance and verification workflows, credential design, custom credential displays, and admin tooling—tailored to your organization.</p>
+            <ul class="clean">
+              <li>Issuer & verifier services, APIs, and integrations</li>
+              <li>Workflow process configurations</li>
+              <li>Credential consulting and design</li>
+            </ul>
+          </div>
+
+          <div class="card accent-orange">
+            <div class="tag"><span class="badge" aria-hidden="true"></span> SSI Mobile Wallet</div>
+            <h3 style="margin-top:10px;">A wallet your users will actually use</h3>
+            <p>Custom mobile wallet applications with branded UX, workflow processes, and secure communications.</p>
+            <ul class="clean">
+              <li>Credential storage + presentation flows</li>
+              <li>Connection management and notifications</li>
+              <li>App hardening and secure key handling</li>
+            </ul>
+          </div>
+
+          <div class="card accent-pink">
+            <div class="tag"><span class="badge pink" aria-hidden="true"></span> Blockchain Smart Contracts</div>
+            <h3 style="margin-top:10px;">Automate policy and proofs</h3>
+            <p>Smart contract patterns that support verification, authorization, and business rules where on-chain assurances are needed.</p>
+            <ul class="clean">
+              <li>On-chain attestations and registries</li>
+              <li>Verification hooks and access gating</li>
+              <li>Zero Knowledge Proofs</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="standards">
+      <div class="wrap">
+        <div class="sectionHead">
+          <div>
+            <h2>Credential standards we support</h2>
+            <p>Choose the right credential type for the job—VeriDID implements standards-based solutions while keeping your business goals in focus.</p>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card accent-green">
+            <h3>AnonCreds, W3C, OpenBadges, and mDL</h3>
+            <p class="small">We can tailor implementations to government, industry, and identity verification needs.</p>
+            <ul class="clean">
+              <li><b style="color:var(--text)">AnonCreds</b> for government foundational identity and secure claims</li>
+              <li><b style="color:var(--text)">W3C credentials</b> for custom industry sector solutions</li>
+              <li><b style="color:var(--text)">OpenBadges</b> for learning and achievement ecosystems</li>
+              <li><b style="color:var(--text)">mDL</b> for driver’s license identity verification</li>
+            </ul>
+          </div>
+
+          <div class="card accent-green">
+            <h3>Life-long learning: LER and CLR</h3>
+            <p>Support learning records and comprehensive learner records to help organizations recognize skills and achievements over time.</p>
+            <ul class="clean">
+              <li>LER/CLR data modeling and interoperability guidance</li>
+              <li>Issuance and verification flows for education & workforce</li>
+              <li>Credential portability across institutions and employers</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflows">
+      <div class="wrap">
+        <div class="sectionHead">
+          <div>
+            <h2>DIDComm connections and workflows</h2>
+            <p>
+              VeriDID uses DIDComm connections and DIDComm workflows to provide context, agency, and engagement between your organization
+              and the credential holders you want to attract.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card accent-green">
+            <h3>Extend internal processes—securely</h3>
+            <p>
+              DIDComm workflows extend your internal processes out to verifiable credential holders and allow them to work with you directly
+              in a secure and authorized channel.
+            </p>
+            <ul class="clean">
+              <li>Authenticated organization-to-holder communications</li>
+              <li>Consent-driven actions with clear context</li>
+              <li>Automated, auditable workflow steps</li>
+            </ul>
+          </div>
+
+          <div class="card accent-green">
+            <h3>Reduce fraud, phishing, and scamming</h3>
+            <p>
+              Be confident in who you’re talking with and give holders peace of mind they’re communicating with the actual organization.
+              Verified channels help eliminate spoofing and impersonation.
+            </p>
+            <ul class="clean">
+              <li>Verified org identity through cryptographic assurance</li>
+              <li>Authorized interactions tied to credentials</li>
+              <li>Clear provenance of messages and requests</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="usecases">
+      <div class="wrap">
+        <div class="sectionHead">
+          <div>
+            <h2>Practical outcomes</h2>
+            <p>Use verifiable credentials to move high-trust interactions online—without sacrificing security or user experience.</p>
+          </div>
+        </div>
+
+        <div class="grid3">
+          <div class="card accent-green">
+            <h3>Government-issued ID for online processes</h3>
+            <p>Use government issued ID credentials in your workflows to move in-person transactions online with even greater assurance.</p>
+          </div>
+          <div class="card accent-green">
+            <h3>Industry sector credential ecosystems</h3>
+            <p>Issue and verify sector-specific credentials (licenses, memberships, qualifications) using standards-based W3C credentials.</p>
+          </div>
+          <div class="card accent-green">
+            <h3>Driver’s license verification (mDL)</h3>
+            <p>Enable modern identity verification flows for access, onboarding, and regulated experiences—built around mDL use cases.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="wrap">
+        <div class="callout accent-green">
+          <div>
+            <h3>Ready to build your CrMS and custom wallet?</h3>
+            <p>
+              Tell us what you’re trying to issue, verify, or automate. We’ll propose an architecture and delivery plan tailored to your organization,
+              including DIDComm workflow design to strengthen trust and reduce fraud.
+            </p>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <a class="btn primary" href="mailto:sales@verid.id?subject=VeriDID%20Consult%20Request&body=Hi%20VeriDID%2C%0A%0AWe%27d%20like%20to%20discuss%20a%20verifiable%20credential%20project.%0A%0AUse%20case%3A%0ATimeline%3A%0AKey%20requirements%3A%0A%0AThanks!">Email us</a>
+            <a class="btn secondary" href="#top">Back to top</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="wrap" style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+        <div>© <span id="year"></span> VeriDID. All rights reserved.</div>
+        <div class="small">CrMS • SSI wallets • DIDComm workflows • Smart contracts</div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
